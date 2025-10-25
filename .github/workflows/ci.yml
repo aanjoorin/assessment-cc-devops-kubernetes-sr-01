@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - master
+      - feat/*
+    paths: 
+      - codebase/rdicidr-0.1.0/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./codebase/rdicidr-0.1.0
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js`
+        uses: actions/setup-node@v6
+        with:
+          node-version: '15.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Run Prettier check
+        run: npm run prettier --write
+
+      - name: Run tests
+        run: CI=true npm run test
+
+      - name: Build project
+        run: npm run build
