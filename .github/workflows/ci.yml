@@ -1,0 +1,38 @@
+name: ci-pipeline
+on:
+  pull_request:
+    paths:
+      - codebase/rdicidr-0.1.0/**
+    branch: [master, feat/*]
+
+jobs:
+  build: 
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./codebase/rdicidr-0.1.0
+
+    steps:
+    - uses: actions/checkout@v5
+  
+    - name: Set Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: '15'
+        # cache: 'npm'
+        # cache-dependency-path: ./codebase/rdicidr-0.1.0/package-lock.json
+  
+    - name: Install Dependencies
+      run: npm install
+  
+    - name: Run Linter
+      run: npm run lint
+      
+    - name: Run Prettier
+      run: npm run prettier --write
+  
+    - name: Run Tests
+      run: CI=true npm run test
+  
+    - name: Build Application
+      run: npm run build
