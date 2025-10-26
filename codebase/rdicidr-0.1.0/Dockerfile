@@ -1,21 +1,21 @@
-FROM node:15 as builder
+FROM node:15 AS builder
 
-WORKDIR
+WORKDIR /app
 
-COPY
+COPY package*.json ./
 
-RUN 
+RUN npm install
 
-COPY
+COPY . .
 
-RUN 
+RUN npm run build
 
-FROM
+FROM node:15-alpine
 
-WORKDIR
+WORKDIR /app
 
-COPY
+COPY --from=builder /app/build ./build
 
-RUN 
+RUN npm install -g serve
 
-ENTRYPOINT 
+ENTRYPOINT ["serve", "-s", "build", "-l", "8080"]
